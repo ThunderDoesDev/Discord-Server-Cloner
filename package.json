@@ -1,0 +1,17 @@
+{
+  "name": "discord-guild-cloner",
+  "version": "2.0.0",
+  "description": "Clone, save, load, and wipe Discord servers using a user account",
+  "type": "module",
+  "main": "cloner.js",
+  "scripts": {
+    "start": "node cloner.js"
+  },
+  "engines": {
+    "node": ">=20.18.0"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "discord.js-selfbot-v13": "^3.7.1"
+  }
+}
