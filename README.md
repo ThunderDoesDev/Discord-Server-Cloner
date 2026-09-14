@@ -100,8 +100,6 @@ Runs append to `Logs/` and keep older entries:
 
 **Token errors** — use a user token in `Settings/config.json`, not a bot token.
 
-**Failed to create guild / Unknown Message** — this tool does not create servers. Make one in Discord, then use Load with that server’s ID.
-
 ## Disclaimer
 
 The creator of this script does not take any responsibility for how the script is used. Use this tool at your own risk. The author is not liable for any consequences or damages, including but not limited to account bans or data loss, that result from using this tool.
