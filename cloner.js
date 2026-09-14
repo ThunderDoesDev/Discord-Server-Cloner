@@ -125,7 +125,7 @@ function uiError(message) {
 
 function displayMenu(userTag, lastStatus) {
   console.clear();
-  const title = 'DISCORD GUILD CLONER';
+  const title = 'DISCORD SERVER CLONER';
   const account = userTag ? `signed in as ${userTag}` : 'not signed in';
   const inner = MENU_WIDTH - 4;
 

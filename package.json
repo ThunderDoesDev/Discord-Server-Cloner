@@ -1,7 +1,7 @@
 {
-  "name": "discord-guild-cloner",
+  "name": "discord-server-cloner",
   "version": "2.0.0",
-  "description": "Clone, save, load, and wipe Discord servers using a user account",
+  "description": "Clone, save, load, and wipe Discord servers using a user account. Use with caution as this script is designed for Discord server cloning and violates Discord's Terms of Service.",
   "type": "module",
   "main": "cloner.js",
   "scripts": {
