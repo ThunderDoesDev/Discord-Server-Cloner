@@ -93,6 +93,20 @@ function roleCreateColors(source) {
   return { primaryColor: source.colour ?? source.color ?? 0 };
 }
 
+function guildHasFeature(guild, feature) {
+  const features = guild?.features;
+  if (!features) return false;
+  if (typeof features.has === 'function') return features.has(feature);
+  if (Array.isArray(features)) return features.includes(feature);
+  return false;
+}
+
+function clampUserLimit(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n) || n <= 0) return 0;
+  return Math.min(Math.floor(n), 99);
+}
+
 const COLOR = {
   reset: '\x1b[0m',
   bold: '\x1b[1m',
@@ -593,7 +607,7 @@ class ServerCloner {
     if (isType(channel, TYPE.voice) || isType(channel, TYPE.stage)) {
       options.type = TYPE.voice;
       options.bitrate = Math.min(channel.bitrate || 64000, 96000);
-      options.userLimit = channel.userLimit || 0;
+      options.userLimit = clampUserLimit(channel.userLimit);
       return options;
     }
 
@@ -606,16 +620,40 @@ class ServerCloner {
 
   async createChannelSafe(guild, options) {
     const { name, ...rest } = options;
+    if (rest.type === TYPE.news && !guildHasFeature(guild, 'COMMUNITY')) {
+      rest.type = TYPE.text;
+    }
+    if (rest.userLimit != null) {
+      rest.userLimit = clampUserLimit(rest.userLimit);
+    }
+
     try {
       return await guild.channels.create(name, rest);
     } catch (error) {
-      if (rest.bitrate) {
-        const fallback = { ...rest };
-        delete fallback.bitrate;
-        log('WARN', `Retrying channel ${name} without bitrate: ${error.message}`);
-        return guild.channels.create(name, fallback);
+      let lastError = error;
+      const message = String(lastError.message || '');
+
+      if (rest.type === TYPE.news) {
+        log('WARN', `Creating ${name} as text instead of announcement: ${message}`);
+        rest.type = TYPE.text;
+        try {
+          return await guild.channels.create(name, rest);
+        } catch (retryError) {
+          lastError = retryError;
+        }
       }
-      throw error;
+
+      if (rest.bitrate) {
+        log('WARN', `Retrying channel ${name} without bitrate: ${lastError.message}`);
+        delete rest.bitrate;
+        try {
+          return await guild.channels.create(name, rest);
+        } catch (retryError) {
+          lastError = retryError;
+        }
+      }
+
+      throw lastError;
     }
   }
 
@@ -722,7 +760,7 @@ class ServerCloner {
     if (type === 'voice') {
       options.type = TYPE.voice;
       if (channelData.bitrate) options.bitrate = Math.min(channelData.bitrate, 96000);
-      if (channelData.user_limit != null) options.userLimit = channelData.user_limit;
+      if (channelData.user_limit != null) options.userLimit = clampUserLimit(channelData.user_limit);
     } else {
       options.type = type === 'announcement' ? TYPE.news : TYPE.text;
       options.topic = channelData.topic || undefined;
