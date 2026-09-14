@@ -82,6 +82,17 @@ function bitfieldToString(bitfield) {
   return (bitfield?.bitfield ?? 0n).toString();
 }
 
+function roleCreateColors(source) {
+  const colors = source.colors;
+  if (colors && typeof colors === 'object' && colors.primaryColor != null) {
+    const created = { primaryColor: colors.primaryColor };
+    if (colors.secondaryColor) created.secondaryColor = colors.secondaryColor;
+    if (colors.tertiaryColor) created.tertiaryColor = colors.tertiaryColor;
+    return created;
+  }
+  return { primaryColor: source.colour ?? source.color ?? 0 };
+}
+
 const COLOR = {
   reset: '\x1b[0m',
   bold: '\x1b[1m',
@@ -485,7 +496,7 @@ class ServerCloner {
         const created = await target.roles.create({
           name: role.name,
           permissions: role.permissions,
-          color: role.color,
+          colors: roleCreateColors(role),
           hoist: role.hoist,
           mentionable: role.mentionable,
           reason: 'Server clone',
@@ -510,7 +521,7 @@ class ServerCloner {
         const created = await guild.roles.create({
           name: role.name,
           permissions: toBitField(role.permissions),
-          color: role.colour ?? role.color ?? 0,
+          colors: roleCreateColors(role),
           hoist: Boolean(role.hoist),
           mentionable: Boolean(role.mentionable),
           reason: 'Server load',
@@ -917,6 +928,7 @@ class ServerCloner {
         name: role.name,
         permissions: bitfieldToString(role.permissions),
         colour: role.color,
+        colors: roleCreateColors(role),
         hoist: role.hoist,
         mentionable: role.mentionable,
         position: role.position,
