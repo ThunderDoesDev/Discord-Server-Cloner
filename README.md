@@ -2,7 +2,7 @@
 
 Node.js tool that copies a Discord server’s layout onto another server you already belong to. It logs in with a **user token**, then lets you clone live, save a snapshot, restore that snapshot, clone several servers in one run, or wipe a target.
 
-**Use with caution** as this script is designed for Discord server cloning and violates Discord's [Terms of Service](https://discord.com/terms). Only use it on servers you administer. Never share your token.
+**Use with caution** as this script is designed for Discord server cloning and violates Discord's [Terms of Service](https://discord.com/terms). Never share your token.
 
 ## Features
 
@@ -20,8 +20,6 @@ Load and live copy can wipe the target first so you do not stack duplicate chann
 - [Node.js](https://nodejs.org/) 20.18 or newer
 - A Discord **user** token (bot tokens are not supported)
 - The account must already be in every source and target server
-- For copy, load, and wipe: Manage Roles, Manage Channels, Manage Emojis, and Manage Guild (Administrator is easiest)
-- Your highest role must sit above any role the script needs to create
 
 ## Setup
 
@@ -98,8 +96,6 @@ Runs append to `Logs/` and keep older entries:
 
 **Unknown Guild** — the account is not in that server, or the ID is wrong. Join it, wait a few seconds, try again.
 
-**Missing permissions** — raise the account’s role on the target, and put it above roles the clone needs to create.
-
 **Rate limits** — the script waits between writes and retries downloads. Let it finish.
 
 **Token errors** — use a user token in `Settings/config.json`, not a bot token.
@@ -118,4 +114,4 @@ For support, issues, or enhancements, please open an issue in this repository or
 
 ## License
 
-[MIT](LICENSE)
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
